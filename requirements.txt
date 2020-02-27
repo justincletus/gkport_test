@@ -51,7 +51,7 @@ entrypoints==0.3
 et-xmlfile==1.0.1
 fastcache==1.1.0
 filelock==3.0.12
-Flask==0.12.2
+Flask==1.0
 Flask-Login==0.4.0
 flask-mongoengine==0.9.3
 Flask-PyMongo==2.3.0
