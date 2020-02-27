@@ -1,3 +1,5 @@
-Code that goes along with a video I made here: https://www.youtube.com/watch?v=vVx1737auSE
+# This is user login and registration test program by using flask and mongo db
 
-This is for a user login system using Flask and MongoDB.
+1. noSql mongo db cloud instance used for this test
+
+2. user login and registration control used python flask.
