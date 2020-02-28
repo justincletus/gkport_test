@@ -53,12 +53,14 @@ def login():
 @app.route('/register', methods=['POST', 'GET'])
 def register():
     if request.method == 'POST':
-        users = mongo.db.users
-        existing_user = users.find_one({'name' : request.form['username']})
+        students = mongo.db.students
+        existing_user = students.find_one({'name': request.form['username']})
+        # users = mongo.db.users
+        # existing_user = users.find_one({'name' : request.form['username']})
 
         if existing_user is None:
             hashpass = bcrypt.hashpw(request.form['pass'].encode('utf-8'), bcrypt.gensalt())
-            users.insert({'name' : request.form['username'], 'password' : hashpass})
+            students.insert({'fullname': request.form['fullname'], 'name' : request.form['username'], 'password' : hashpass})
             session['username'] = request.form['username']
             return redirect(url_for('index'))
 

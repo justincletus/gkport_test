@@ -1,4 +1,4 @@
-# This is user login and registration test program by using flask and mongo db
+# This is student registration system test program by using flask and mongo db
 
 1. noSql mongo db cloud instance used for this test
 
