@@ -8,20 +8,13 @@ def unique_random_num(num, val):
             break
     return num
 
-
-
-player1_points = 0
-player2_points = 0
-
-values = [1, 2, 3, 4, 5, 6, 7, 8, 9,10]
-values2 = values
+values = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+values2 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
 
 unique_values = []
 
 random_num = random.choice(values2)
-
-# print(unique_random_num(values2, random_num))
 
 def player_values(values2):
     count = 0
@@ -33,35 +26,44 @@ def player_values(values2):
 
     return unique_values
 
-player1 = player_values(values2)
+player1 = player_values(values)
 
-player2 = player_values(player1)
+player2 = player_values(values2)
 
-print(player1, player2)
+player1 = player1[0:10]
+player2 = player2[10:]
 
+def play_game(player1, player2):
+    player1_points = 0
+    player2_points = 0
+    game = 0
+    while(game < 10):
+        player1_num = random.choice(player1)
+        player2_num = random.choice(player2)
+        player1 = unique_random_num(player1, player1_num)
+        player2 = unique_random_num(player2, player2_num)
 
-game = 0
-while(game < 10):
-    player1_num = random.choice(player1)
-    player2_num = random.choice(player2)
-    player1 = unique_random_num(player1, player1_num)
-    player2 = unique_random_num(player2, player2_num)
-
-    if player1_num == player2_num:
-        player1_points +=1
-        player2_points +=1
-
-    elif (player1_num < player2_num):
-        if player1_num == 1:
+        if player1_num == player2_num:
             player1_points +=1
-        else:
-            player2_points +=2
-    elif (player2_num < player1_num):
-        if player2_num == 1:
             player2_points +=1
-        else:
-            player1_points +=2
-    if(player1_points == 5 | player2_points == 5):
-        print("I am here")
-        break
-    game +=1
+
+        elif (player1_num < player2_num):
+            if player1_num == 1:
+                player1_points +=1
+            else:
+                player2_points +=2
+
+        elif (player2_num < player1_num):
+            if player2_num == 1:
+                player2_points +=1
+            else:
+                player1_points +=2
+        if(player1_points >= 5 or player2_points >= 5):
+            if(player1_points >= 5):
+                print("Player1 winner")
+            else:
+                print("player2 winner")
+            break
+        game +=1
+
+play_game(player1, player2)
