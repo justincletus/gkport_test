@@ -40,9 +40,10 @@ def play_game(player1, player2):
     while(game < 10):
         player1_num = random.choice(player1)
         player2_num = random.choice(player2)
+        print("Player-1 Entered num : ", player1_num, " Player-2 Entered num : ", player2_num)
         player1 = unique_random_num(player1, player1_num)
         player2 = unique_random_num(player2, player2_num)
-
+        
         if player1_num == player2_num:
             player1_points +=1
             player2_points +=1

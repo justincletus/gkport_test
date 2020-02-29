@@ -21,7 +21,7 @@
             <ul class="nav navbar-nav navbar-right">
                 {% if username %}
                     <li class="active"><a href="./">{{ username }} <span class="sr-only">(current)</span></a></li>
-                    <li class="navbar-item"><a href="{{ url_for('records') }}">Records</a></li>
+                    <li class="navbar-item"><a href="{{ url_for('records') }} ">Records</a></li>
                 
                     <li class="navbar-item"><a href="/logout"> Logout </a></li>
                 {% else %}
@@ -31,5 +31,6 @@
           </div><!--/.nav-collapse -->
         </div><!--/.container-fluid -->
       </nav>
-    </div>
+    
+</div>
 {% endblock %}
