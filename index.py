@@ -5,10 +5,7 @@ import bcrypt
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField
 from flask_mongoengine import MongoEngine, Document
-import os
-import json
-import datetime
-from bson.objectid import ObjectId
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 app = Flask(__name__)
@@ -42,21 +39,11 @@ def login():
     
     if request.method == 'POST':
         
-        users = mongo.db.students
-        
-        user_pass = bcrypt.hashpw(request.form['pass'].encode('utf-8'), bcrypt.gensalt())
-        existing_pass = users.find_one({'password': user_pass})
-        
-        print(user_pass)
-        print(existing_pass)
-            
+        users = mongo.db.students            
         login_user = users.find_one({'name' : request.form['username']})
         
-
-        if login_user:
-            # and (login_user['password'] == user_pass
-            # if bcrypt.hashpw(request.form['pass'].encode('utf-8'), login_user['password'].encode('utf-8')) == login_user['password'].encode('utf-8'):
-            if (login_user['name'] == request.form['username']):
+        if login_user:            
+            if ((login_user['name'] == request.form['username']) and check_password_hash(login_user['password'], request.form['pass'])):
                 session['username'] = request.form['username']
                 username = session['username']
                 return render_template('index.html', username=username)
@@ -71,10 +58,10 @@ def register():
         students = mongo.db.students
         existing_user = students.find_one({'name': request.form['username']})
         
-
         if existing_user is None:
-            hashpass = bcrypt.hashpw(request.form['pass'].encode('utf-8'), bcrypt.gensalt())
-            students.insert({'fullname': request.form['fullname'], 'roll_number': request.form['roll_number'], 'name' : request.form['username'], 'standard': request.form['standard'], 'password' : hashpass})
+            pass1 = generate_password_hash(request.form['pass'], method='sha256')
+            #hashpass = bcrypt.hashpw(request.form['pass'].encode('utf-8'), bcrypt.gensalt())
+            students.insert({'fullname': request.form['fullname'], 'roll_number': request.form['roll_number'], 'name' : request.form['username'], 'standard': request.form['standard'], 'password' : pass1})
             session['username'] = request.form['username']
             
             return redirect(url_for('index'))
@@ -113,8 +100,8 @@ def records():
         data = mongo.db.records
         std = request.form['standard']
         if int(std) >= int(standards):
-            error = "You can't insert record greater then your current standard!"
-            flash("You can't insert record greater then or equal to your current standard!")
+            error = "You can't insert record greater than your current standard!"
+            flash("You can't insert record greater than or equal to your current standard!")
             return redirect(url_for('records', error=error))
         elif (int(std) < 2) and (int(standards) ==1):
             flash("You can't insert record because your current standard is %s"%standards)
@@ -123,12 +110,16 @@ def records():
         grade = request.form['grade']
         remark = request.form['remark']
         percentage = request.form['percentage']
-        existing_record = data.find_one({'standard': std})
-        if not existing_record is None:
-            error = "You can't insert dublicate record!"            
-        else:
+        existing_record = data.find_one({"standard": std})
+        if existing_record is None:
             data.insert({'user_id': user_id['_id'], 'standard': std, 'grade': grade, 'remark': remark, 'percentage': percentage})
             flash("Record inserted!")
+            
+        elif existing_record['user_id'] != user_id['_id']:
+            data.insert({'user_id': user_id['_id'], 'standard': std, 'grade': grade, 'remark': remark, 'percentage': percentage})
+            flash("Record inserted!")                                   
+        else:
+            error = "You can't insert dublicate record!"
          
     data = mongo.db.records
     results = data.find({'user_id': user_id['_id']})
